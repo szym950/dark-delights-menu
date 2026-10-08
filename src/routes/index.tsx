@@ -1,16 +1,17 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useState } from 'react';
-import { ArrowUpRight, Search, X } from 'lucide-react';
+import { ArrowUpRight, Search, X, Plus, Check, ShoppingBag, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { categories, dishes, type Category, type Dish } from '@/lib/menu';
+import { MenuCart, type CartItem } from '@/components/menu-cart';
 
 export const Route = createFileRoute('/')({
   head: () => ({ meta: [
-    { title: 'Menu — Pizza & Street Food' },
-    { name: 'description', content: 'Poznaj nasze menu: pizza, loaded fries i chrupiące stripsy. Zobacz zdjęcia dań i ich składniki.' },
-    { property: 'og:title', content: 'Menu — Pizza & Street Food' },
-    { property: 'og:description', content: 'Pizza, loaded fries i stripsy. Wybierz swój smak i poznaj składniki.' },
+    { title: 'Menu — Wake Up House | Głogów Małopolski' },
+    { name: 'description', content: 'Menu Wake Up House: burgery, pizza, loaded fries i stripsy. Parkowa 10, 36-060 Głogów Małopolski.' },
+    { property: 'og:title', content: 'Menu — Wake Up House' },
+    { property: 'og:description', content: 'Burgery, pizza i street food. Wake Up House, Parkowa 10, Głogów Małopolski.' },
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary_large_image' },
   ] }),
@@ -22,6 +23,14 @@ function Index() {
   const [search, setSearch] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const [selected, setSelected] = useState<Dish | null>(null);
+  const [cart, setCart] = useState<CartItem[]>([]);
+  const [cartOpen, setCartOpen] = useState(false);
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const changeCart = (dish: Dish, delta: number) => setCart(current => {
+    const exists = current.find(item => item.dish.name === dish.name);
+    if (!exists) return delta > 0 ? [...current, { dish, quantity: delta }] : current;
+    return current.map(item => item.dish.name === dish.name ? { ...item, quantity: item.quantity + delta } : item).filter(item => item.quantity > 0);
+  });
   const visible = dishes.filter(dish => (category === 'Wszystko' || dish.category === category) && `${dish.name} ${dish.ingredients.join(' ')}`.toLocaleLowerCase('pl').includes(search.toLocaleLowerCase('pl')));
   const selectCategory = (next: Category) => {
     setCategory(next);
@@ -32,18 +41,18 @@ function Index() {
     <>
       <header className="site-header">
         <div className="menu-shell header-inner">
-          <a href="/" className="wordmark" aria-label="Pizza and Street Food — strona główna">PIZZA &<span>STREET FOOD</span></a>
+          <a href="/" className="wordmark" aria-label="Wake Up House — strona główna">WAKE UP<span>HOUSE</span></a>
           <nav className="header-nav" aria-label="Nawigacja główna">
             <Button variant="ghost" className="nav-current" onClick={() => selectCategory('Wszystko')}>Menu</Button>
-            <Button variant="ghost" onClick={() => selectCategory('Pizza')}>Pizza</Button>
-            <Button variant="ghost" className="street-nav" onClick={() => selectCategory('Loaded fries')}>Street food</Button>
+            <Button variant="ghost" className="street-nav" onClick={() => selectCategory('Burgery')}>Burgery</Button>
+            <Button variant="ghost" className="street-nav" onClick={() => selectCategory('Pizza')}>Pizza</Button>
           </nav>
-          <span className="header-label">Pizza. Frytki. Dobry wybór.</span>
+          <Button variant="outline" className="cart-button" onClick={() => setCartOpen(true)} aria-label={`Otwórz koszyk, ${cartCount} dań`}><ShoppingBag /><span>Koszyk</span><span className="cart-count">{cartCount}</span></Button>
         </div>
       </header>
       <main>
         <div className="menu-shell menu-intro">
-          <div><p className="eyebrow">Pizza & street food</p><h1 className="menu-title">MENU<span>.</span></h1></div>
+          <div><p className="eyebrow">Wake Up House · Burgery, pizza & street food</p><h1 className="menu-title">MENU<span>.</span></h1></div>
           <p className="intro-copy"><strong>Na co masz dziś ochotę?</strong><br />Wybierz swój smak. Resztę zostaw nam.</p>
         </div>
         <div className="category-bar" id="menu-list">
@@ -66,19 +75,20 @@ function Index() {
                 <p className="product-meta">{dish.category}</p>
                 <h3 className="product-title">{dish.name}</h3>
                 <p className="product-desc">{dish.ingredients.join(' · ')}</p>
-                <div className="product-bottom"><Button variant="ghost" className="product-detail-button" onClick={() => setSelected(dish)} aria-label={`Zobacz więcej: ${dish.name}`}>Zobacz więcej <ArrowUpRight /></Button></div>
+                <div className="product-bottom"><Button variant="ghost" className="product-detail-button" onClick={() => setSelected(dish)} aria-label={`Zobacz więcej: ${dish.name}`}>Składniki <ArrowUpRight /></Button><Button className="add-cart-button" onClick={() => changeCart(dish, 1)} aria-label={`Dodaj do koszyka: ${dish.name}`}>{cart.some(item => item.dish.name === dish.name) ? <Check /> : <Plus />} Do koszyka</Button></div>
               </div>
             </article>)}
           </div>
           {visible.length === 0 && <div className="empty-results"><p>Nie znaleziono dań.</p><Button variant="link" onClick={() => { setSearch(''); setCategory('Wszystko'); }}>Pokaż całe menu</Button></div>}
         </section>
       </main>
-      <footer className="menu-footer"><div className="menu-shell footer-inner"><p className="footer-brand">PIZZA & STREET FOOD<span className="text-primary">.</span></p><p className="footer-label">Dobry smak. Prosty wybór.</p></div></footer>
+      <footer className="menu-footer"><div className="menu-shell footer-inner"><p className="footer-brand">WAKE UP HOUSE<span className="text-primary">.</span></p><a className="footer-address" href="https://www.google.com/maps/search/?api=1&query=Parkowa+10+36-060+G%C5%82og%C3%B3w+Ma%C5%82opolski" target="_blank" rel="noopener noreferrer"><MapPin /><span>Parkowa 10<br />36-060 Głogów Małopolski</span><ArrowUpRight /></a></div></footer>
+      <MenuCart open={cartOpen} onOpenChange={setCartOpen} items={cart} onChange={changeCart} />
       <Dialog open={selected !== null} onOpenChange={open => { if (!open) setSelected(null); }}>
         <DialogContent className="dish-dialog">
           {selected && <div className="dish-dialog-grid">
             <img src={selected.image} alt={selected.name} className="product-image" />
-            <div className="dish-dialog-copy"><p className="product-meta">{selected.category}</p><DialogTitle className="dish-dialog-title">{selected.name}</DialogTitle><p className="ingredients-title">SKŁADNIKI</p><DialogDescription className="ingredients-list">{selected.ingredients.join(' · ')}</DialogDescription></div>
+            <div className="dish-dialog-copy"><p className="product-meta">{selected.category}</p><DialogTitle className="dish-dialog-title">{selected.name}</DialogTitle><p className="ingredients-title">SKŁADNIKI</p><DialogDescription className="ingredients-list">{selected.ingredients.join(' · ')}</DialogDescription><Button className="dialog-add-button" onClick={() => { changeCart(selected, 1); setSelected(null); setCartOpen(true); }}><Plus /> Dodaj do koszyka</Button></div>
           </div>}
         </DialogContent>
       </Dialog>

@@ -10,5 +10,5 @@
 <!-- LOVABLE:END -->
 
 - Keep menu content in a browser-safe data module with imported asset pointers so new dishes can be added without changing the page layout.
-- Use the home route for the menu and local category/search state for filtering; item details open in an accessible dialog because this is a menu catalogue, not an ordering flow.
+- Use the home route for the menu with in-memory category/search and cart state; accessible dialogs hold dish details and cart quantities, and checkout must not be presented until real pricing and an order flow are supplied.
 - Define all menu visual styles and semantic tokens in the global stylesheet to keep the catalogue and future dishes visually consistent.
