@@ -218,6 +218,15 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 .quantity-control span { min-width: 24px; text-align: center; font-size: 12px; }
 .quantity-control button { width: 28px; height: 28px; }
 .cart-summary { display: flex; justify-content: space-between; padding-block: 10px; font-size: 13px; }
+.menu-footer { padding-block: 42px; }
+.footer-inner { align-items: start; }
+.footer-address { margin-top: 18px; }
+.opening-hours { width: 260px; }
+.opening-hours h2 { font-family: var(--font-heading); font-size: 24px; font-weight: 700; margin-bottom: 14px; }
+.opening-hours dl > div { display: flex; justify-content: space-between; gap: 24px; font-size: 11px; line-height: 2.3; }
+.opening-hours dt { color: var(--muted-foreground); }
+.hours-closed { color: var(--muted-foreground); }
+@media (max-width: 600px) { .footer-inner { flex-direction: column; gap: 30px; } .opening-hours { width: 100%; max-width: 340px; } }
 @media (max-width: 600px) { .cart-button { gap: 8px; padding-inline: 10px; } .cart-button > span:not(.cart-count) { display: none; } .footer-address { font-size: 10px; gap: 8px; } .footer-brand { font-size: 18px; } .eyebrow { font-size: 9px; letter-spacing: 1px; } .cart-dialog { width: calc(100% - 32px); border-radius: 6px; } }
 @media (min-width: 1500px) { .menu-shell { width: min(1280px, calc(100% - 120px)); } }
 @media (max-width: 900px) { .menu-shell { width: calc(100% - 48px); } .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .header-label { display: none; } .header-nav { gap: 12px; } .menu-title { font-size: 96px; } }
