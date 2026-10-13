@@ -18,31 +18,41 @@ export const Route = createFileRoute('/kontakt')({
 function Kontakt() {
   return (
     <PageShell active="/kontakt" eyebrow="Wake Up House · Jesteśmy dostępni" title="Kontakt">
-      <div className="contact-list">
-        <div className="info-card">
-          <p className="info-label">Adres</p>
-          <p className="info-text">Parkowa 10<br />36-060 Głogów Małopolski</p>
+      <div className="contact-layout">
+        <section className="contact-main">
+          <p className="contact-label">Adres</p>
+          <p className="contact-value">Parkowa 10</p>
+          <p className="contact-sub">36-060 Głogów Małopolski</p>
           <a className="delivery-more" href={site.mapUrl} target="_blank" rel="noopener noreferrer">Zobacz na mapie <ArrowUpRight /></a>
-        </div>
-        <div className="info-card">
-          <p className="info-label">Telefon</p>
-          <p className="info-text">{site.phone}</p>
-        </div>
-        <div className="info-card">
-          <p className="info-label">Godziny otwarcia</p>
-          <dl className="hours-list">{openingHours.map(({ day, hours }) => <div key={day}><dt>{day}</dt><dd className={hours === 'Zamknięte' ? 'hours-closed' : ''}>{hours}</dd></div>)}</dl>
-        </div>
-        <div className="info-card">
-          <p className="info-label">Facebook</p>
-          <p className="info-text">Link do uzupełnienia.</p>
-        </div>
-        <div className="info-card">
-          <p className="info-label">Instagram</p>
-          <p className="info-text">Link do uzupełnienia.</p>
-        </div>
-        <div className="info-card">
-          <p className="info-label">Dane firmy / NIP</p>
-          <p className="info-text">{site.nip}</p>
+        </section>
+        <section className="contact-main">
+          <p className="contact-label">Telefon</p>
+          <p className="contact-value">{site.phone}</p>
+          <p className="contact-sub">Zadzwoń i zamów z dostawą lub na odbiór.</p>
+        </section>
+        <section className="contact-main contact-hours-card">
+          <p className="contact-label">Godziny otwarcia</p>
+          <dl className="hours-list">
+            {openingHours.map(({ day, hours }) => (
+              <div key={day}>
+                <dt>{day}</dt>
+                <dd className={hours === 'Zamknięte' ? 'hours-closed' : ''}>{hours}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+        <section className="contact-main">
+          <p className="contact-label">W sieci</p>
+          <p className="contact-value contact-value-small">Facebook</p>
+          <p className="contact-sub">Link do uzupełnienia.</p>
+          <p className="contact-value contact-value-small">Instagram</p>
+          <p className="contact-sub">Link do uzupełnienia.</p>
+        </section>
+      </div>
+      <div className="contact-meta">
+        <div>
+          <p className="contact-label">Dane firmy / NIP</p>
+          <p className="contact-meta-text">{site.nip}</p>
         </div>
       </div>
     </PageShell>
