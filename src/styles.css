@@ -238,3 +238,51 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
  .dish-dialog { width: calc(100% - 32px); } .dish-dialog-grid { grid-template-columns: 1fr; } .dish-dialog .product-image { max-height: 45dvh; } .dish-dialog-copy { padding: 25px; } .footer-inner { align-items: start; } .footer-label { max-width: 130px; text-align: right; line-height: 1.8; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+/* === Podstrony: Dostawa, O nas, Kontakt, Najczęściej wybierane === */
+.page-title { font-family: var(--font-heading); font-size: 88px; line-height: 1; font-weight: 800; margin-top: 9px; }
+.page-title span { color: var(--primary); }
+.page-content { padding-bottom: 72px; }
+.header-nav-link { font-size: 14px; font-weight: 500; color: var(--foreground); transition: color .2s; }
+.header-nav-link:hover { color: var(--primary); }
+.header-nav-link.is-current { color: var(--primary); }
+.info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px 32px; padding-top: 12px; }
+.info-card { background: var(--card); border-radius: 6px; padding: 22px 24px; min-width: 0; }
+.info-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; }
+.info-text { font-size: 12px; line-height: 1.9; color: var(--muted-foreground); }
+.info-text strong { color: var(--foreground); font-weight: 600; }
+.top-picks { padding-bottom: 14px; }
+.top-picks .section-heading { margin-bottom: 24px; }
+.start-extra { padding-bottom: 72px; }
+.delivery-strip { display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 26px 28px; }
+.delivery-short { font-size: 13px; line-height: 1.8; color: var(--muted-foreground); margin-top: 10px; max-width: 520px; }
+.delivery-short strong { color: var(--foreground); font-weight: 600; }
+.delivery-more { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 12px; font-weight: 700; color: var(--primary); }
+.delivery-more svg { width: 14px; }
+.platform-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+.delivery-strip .platform-buttons { flex-direction: column; flex-wrap: nowrap; }
+.platform-button { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding-inline: 22px; border: 1px solid var(--border); border-radius: 4px; background: var(--secondary); font-size: 12px; font-weight: 700; color: var(--foreground); transition: border-color .2s; }
+.platform-button:hover { border-color: var(--primary); }
+.platform-button[aria-disabled='true'] { opacity: .6; cursor: default; }
+.order-cta { margin-top: 34px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 26px 28px; display: grid; gap: 14px; justify-items: start; }
+.inline-link { color: var(--primary); font-weight: 700; }
+.about-copy { max-width: 720px; display: grid; gap: 16px; }
+.about-copy p { font-size: 13px; line-height: 1.9; color: var(--muted-foreground); }
+.about-copy strong { color: var(--foreground); font-weight: 600; }
+.about-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
+.about-gallery img { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--card); border-radius: 6px; padding: 10px; }
+.about-place { margin-top: 36px; max-width: 560px; }
+.about-place .delivery-more { margin-top: 4px; }
+.contact-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 32px; padding-top: 12px; }
+.hours-list > div { display: flex; justify-content: space-between; gap: 24px; font-size: 11px; line-height: 2.3; }
+.hours-list dt { color: var(--muted-foreground); }
+.footer-links { display: flex; flex-wrap: wrap; gap: 18px; font-size: 11px; margin-bottom: 26px; }
+.footer-links a { color: var(--muted-foreground); transition: color .2s; }
+.footer-links a:hover { color: var(--primary); }
+@media (max-width: 900px) { .info-grid, .contact-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+ .page-title { font-size: 72px; }
+ .info-grid, .contact-list { grid-template-columns: 1fr; }
+ .delivery-strip { flex-direction: column; }
+ .delivery-strip .platform-buttons { flex-direction: row; flex-wrap: wrap; width: 100%; }
+ .about-gallery { grid-template-columns: repeat(2, 1fr); }
+}
