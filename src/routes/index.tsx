@@ -103,6 +103,19 @@ function Index() {
           </div>
         </div>
         <section className="menu-shell menu-content" aria-label="Dania">
+        {category === 'Wszystko' && !search && <section className="top-picks" aria-label="Najczęściej wybierane">
+          <div className="section-heading"><h2>Najczęściej wybierane</h2><p>Na podstawie zamówień na tym urządzeniu</p></div>
+          {topDishes.length === 0 ? <p className="top-picks-empty">Tu pojawią się dania, które klienci najczęściej dodają do koszyka.</p> : <div className="product-grid">
+            {topDishes.map(dish => <article className="product-card" key={dish.name}>
+              <img src={dish.image} alt={dish.name} className="product-image" loading="lazy" width="768" height="768" />
+              <div className="product-info">
+                <p className="product-meta">{dish.category}</p>
+                <h3 className="product-title">{dish.name}</h3>
+                <div className="product-bottom"><Button className="add-cart-button" onClick={() => changeCart(dish, 1)} aria-label={`Dodaj do koszyka: ${dish.name}`}>{cart.some(item => item.dish.name === dish.name) ? <Check /> : <Plus />} Do koszyka</Button></div>
+              </div>
+            </article>)}
+          </div>}
+        </section>}
           <div className="section-heading"><h2>{category === 'Wszystko' ? 'Wszystkie smaki' : category}</h2><p>{visible.length} {visible.length === 1 ? 'pozycja' : visible.length >= 2 && visible.length <= 4 ? 'pozycje' : 'pozycji'} w menu</p></div>
           <div className="product-grid">
             {visible.map(dish => <article className="product-card" key={dish.name}>
@@ -117,19 +130,6 @@ function Index() {
           </div>
           {visible.length === 0 && <div className="empty-results"><p>Nie znaleziono dań.</p><Button variant="link" onClick={() => { setSearch(''); setCategory('Wszystko'); }}>Pokaż całe menu</Button></div>}
         </section>
-        {topDishes.length > 0 && <section className="menu-shell top-picks" aria-label="Najczęściej wybierane">
-          <div className="section-heading"><h2>Najczęściej wybierane</h2><p>Na podstawie zamówień na tym urządzeniu</p></div>
-          <div className="product-grid">
-            {topDishes.map(dish => <article className="product-card" key={dish.name}>
-              <img src={dish.image} alt={dish.name} className="product-image" loading="lazy" width="768" height="768" />
-              <div className="product-info">
-                <p className="product-meta">{dish.category}</p>
-                <h3 className="product-title">{dish.name}</h3>
-                <div className="product-bottom"><Button className="add-cart-button" onClick={() => changeCart(dish, 1)} aria-label={`Dodaj do koszyka: ${dish.name}`}>{cart.some(item => item.dish.name === dish.name) ? <Check /> : <Plus />} Do koszyka</Button></div>
-              </div>
-            </article>)}
-          </div>
-        </section>}
         <section className="menu-shell start-extra" aria-label="Dostawa i zamówienie">
           <div className="delivery-strip">
             <div>
