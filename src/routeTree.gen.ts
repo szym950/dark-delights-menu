@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DostawaRouteImport } from './routes/dostawa'
+import { Route as KontaktRouteImport } from './routes/kontakt'
+import { Route as ONasRouteImport } from './routes/o-nas'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DostawaRoute = DostawaRouteImport.update({
+  id: '/dostawa',
+  path: '/dostawa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KontaktRoute = KontaktRouteImport.update({
+  id: '/kontakt',
+  path: '/kontakt',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ONasRoute = ONasRouteImport.update({
+  id: '/o-nas',
+  path: '/o-nas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dostawa': typeof DostawaRoute
+  '/kontakt': typeof KontaktRoute
+  '/o-nas': typeof ONasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dostawa': typeof DostawaRoute
+  '/kontakt': typeof KontaktRoute
+  '/o-nas': typeof ONasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dostawa': typeof DostawaRoute
+  '/kontakt': typeof KontaktRoute
+  '/o-nas': typeof ONasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dostawa' | '/kontakt' | '/o-nas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dostawa' | '/kontakt' | '/o-nas'
+  id: '__root__' | '/' | '/dostawa' | '/kontakt' | '/o-nas'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DostawaRoute: typeof DostawaRoute
+  KontaktRoute: typeof KontaktRoute
+  ONasRoute: typeof ONasRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dostawa': {
+      id: '/dostawa'
+      path: '/dostawa'
+      fullPath: '/dostawa'
+      preLoaderRoute: typeof DostawaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kontakt': {
+      id: '/kontakt'
+      path: '/kontakt'
+      fullPath: '/kontakt'
+      preLoaderRoute: typeof KontaktRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/o-nas': {
+      id: '/o-nas'
+      path: '/o-nas'
+      fullPath: '/o-nas'
+      preLoaderRoute: typeof ONasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DostawaRoute: DostawaRoute,
+  KontaktRoute: KontaktRoute,
+  ONasRoute: ONasRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

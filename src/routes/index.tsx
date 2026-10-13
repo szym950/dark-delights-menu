@@ -1,10 +1,12 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { useState } from 'react';
-import { ArrowUpRight, Search, X, Plus, Check, ShoppingBag, MapPin } from 'lucide-react';
+import { createFileRoute, Link } from '@tanstack/react-router';
+import { useEffect, useState } from 'react';
+import { ArrowUpRight, Search, X, Plus, Check, ShoppingBag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { categories, dishes, type Category, type Dish } from '@/lib/menu';
 import { MenuCart, type CartItem } from '@/components/menu-cart';
+import { SiteFooter } from '@/components/site-footer';
+import { site } from '@/lib/site';
 
 export const Route = createFileRoute('/')({
   head: () => ({ meta: [
@@ -18,6 +20,26 @@ export const Route = createFileRoute('/')({
   component: Index,
 });
 
+const orderCountsKey = 'wuh-dish-counts';
+
+function readOrderCounts(): Record<string, number> {
+  try {
+    return JSON.parse(localStorage.getItem(orderCountsKey) ?? '{}') as Record<string, number>;
+  } catch {
+    return {};
+  }
+}
+
+function recordOrder(dish: Dish) {
+  try {
+    const counts = readOrderCounts();
+    counts[dish.name] = (counts[dish.name] ?? 0) + 1;
+    localStorage.setItem(orderCountsKey, JSON.stringify(counts));
+  } catch {
+    // Pamięć przeglądarki niedostępna — pomijamy liczenie.
+  }
+}
+
 function Index() {
   const [category, setCategory] = useState<Category>('Wszystko');
   const [search, setSearch] = useState('');
@@ -26,11 +48,22 @@ function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [cartOpen, setCartOpen] = useState(false);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  const changeCart = (dish: Dish, delta: number) => setCart(current => {
-    const exists = current.find(item => item.dish.name === dish.name);
-    if (!exists) return delta > 0 ? [...current, { dish, quantity: delta }] : current;
-    return current.map(item => item.dish.name === dish.name ? { ...item, quantity: item.quantity + delta } : item).filter(item => item.quantity > 0);
-  });
+  const [topDishes, setTopDishes] = useState<Dish[]>([]);
+  useEffect(() => {
+    const counts = readOrderCounts();
+    setTopDishes(dishes
+      .filter(dish => (counts[dish.name] ?? 0) > 0)
+      .sort((a, b) => (counts[b.name] ?? 0) - (counts[a.name] ?? 0))
+      .slice(0, 4));
+  }, [cartCount]);
+  const changeCart = (dish: Dish, delta: number) => {
+    if (delta > 0) recordOrder(dish);
+    setCart(current => {
+      const exists = current.find(item => item.dish.name === dish.name);
+      if (!exists) return delta > 0 ? [...current, { dish, quantity: delta }] : current;
+      return current.map(item => item.dish.name === dish.name ? { ...item, quantity: item.quantity + delta } : item).filter(item => item.quantity > 0);
+    });
+  };
   const visible = dishes.filter(dish => (category === 'Wszystko' || dish.category === category) && `${dish.name} ${dish.ingredients.join(' ')}`.toLocaleLowerCase('pl').includes(search.toLocaleLowerCase('pl')));
   const selectCategory = (next: Category) => {
     setCategory(next);
@@ -46,6 +79,9 @@ function Index() {
             <Button variant="ghost" className="nav-current" onClick={() => selectCategory('Wszystko')}>Menu</Button>
             <Button variant="ghost" className="street-nav" onClick={() => selectCategory('Burgery')}>Burgery</Button>
             <Button variant="ghost" className="street-nav" onClick={() => selectCategory('Pizza')}>Pizza</Button>
+            <Link to="/dostawa" className="header-nav-link street-nav">Dostawa</Link>
+            <Link to="/o-nas" className="header-nav-link street-nav">O nas</Link>
+            <Link to="/kontakt" className="header-nav-link street-nav">Kontakt</Link>
           </nav>
           <Button variant="outline" className="cart-button" onClick={() => setCartOpen(true)} aria-label={`Otwórz koszyk, ${cartCount} dań`}><ShoppingBag /><span>Koszyk</span><span className="cart-count">{cartCount}</span></Button>
         </div>
@@ -81,8 +117,36 @@ function Index() {
           </div>
           {visible.length === 0 && <div className="empty-results"><p>Nie znaleziono dań.</p><Button variant="link" onClick={() => { setSearch(''); setCategory('Wszystko'); }}>Pokaż całe menu</Button></div>}
         </section>
+        {topDishes.length > 0 && <section className="menu-shell top-picks" aria-label="Najczęściej wybierane">
+          <div className="section-heading"><h2>Najczęściej wybierane</h2><p>Na podstawie zamówień na tym urządzeniu</p></div>
+          <div className="product-grid">
+            {topDishes.map(dish => <article className="product-card" key={dish.name}>
+              <img src={dish.image} alt={dish.name} className="product-image" loading="lazy" width="768" height="768" />
+              <div className="product-info">
+                <p className="product-meta">{dish.category}</p>
+                <h3 className="product-title">{dish.name}</h3>
+                <div className="product-bottom"><Button className="add-cart-button" onClick={() => changeCart(dish, 1)} aria-label={`Dodaj do koszyka: ${dish.name}`}>{cart.some(item => item.dish.name === dish.name) ? <Check /> : <Plus />} Do koszyka</Button></div>
+              </div>
+            </article>)}
+          </div>
+        </section>}
+        <section className="menu-shell start-extra" aria-label="Dostawa i zamówienie">
+          <div className="delivery-strip">
+            <div>
+              <p className="info-label">Dostawa i odbiór</p>
+              <p className="delivery-short"><strong>Dowozimy i przyjmujemy odbiór osobisty</strong> w Głogowie Małopolskim. Strefy dowozu, minimalna wartość zamówienia i godziny dostaw — doprecyzujemy wkrótce.</p>
+              <Link to="/dostawa" className="delivery-more">Szczegóły dostawy <ArrowUpRight /></Link>
+            </div>
+            <div>
+              <p className="info-label">Zamów przez</p>
+              <div className="platform-buttons">
+                {site.platforms.map(platform => <a key={platform.name} className="platform-button" href={platform.url ?? '#'} aria-disabled={platform.url ? undefined : true} title={platform.url ? platform.name : `${platform.name} — link do uzupełnienia`} target={platform.url ? '_blank' : undefined} rel={platform.url ? 'noopener noreferrer' : undefined}>{platform.name}</a>)}
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
-      <footer className="menu-footer"><div className="menu-shell footer-inner"><div><p className="footer-brand">WAKE UP HOUSE<span className="text-primary">.</span></p><a className="footer-address" href="https://www.google.com/maps/search/?api=1&query=Parkowa+10+36-060+G%C5%82og%C3%B3w+Ma%C5%82opolski" target="_blank" rel="noopener noreferrer"><MapPin /><span>Parkowa 10<br />36-060 Głogów Małopolski</span><ArrowUpRight /></a></div><div className="opening-hours"><h2>Godziny otwarcia</h2><dl>{[['Poniedziałek', 'Zamknięte'], ['Wtorek', 'Zamknięte'], ['Środa', '15:00–21:00'], ['Czwartek', '15:00–21:00'], ['Piątek', '15:00–22:00'], ['Sobota', '12:00–22:00'], ['Niedziela', '12:00–20:00']].map(([day, hours]) => <div key={day}><dt>{day}</dt><dd className={hours === 'Zamknięte' ? 'hours-closed' : ''}>{hours}</dd></div>)}</dl></div></div></footer>
+      <SiteFooter />
       <MenuCart open={cartOpen} onOpenChange={setCartOpen} items={cart} onChange={changeCart} />
       <Dialog open={selected !== null} onOpenChange={open => { if (!open) setSelected(null); }}>
         <DialogContent className="dish-dialog">
