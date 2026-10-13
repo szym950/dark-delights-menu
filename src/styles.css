@@ -245,7 +245,7 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 .page-title { font-family: var(--font-heading); font-size: 88px; line-height: 1; font-weight: 800; margin-top: 9px; }
 .page-title span { color: var(--primary); }
 .page-content { padding-bottom: 72px; }
-.header-nav-link { font-size: 14px; font-weight: 500; color: var(--foreground); transition: color .2s; }
+.header-nav-link { font: inherit; font-size: 14px; font-weight: 500; color: var(--foreground); background: none; border: 0; padding: 0; cursor: pointer; transition: color .2s; }
 .header-nav-link:hover { color: var(--primary); }
 .header-nav-link.is-current { color: var(--primary); }
 .info-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 42px 56px; padding-top: 16px; }
