@@ -290,10 +290,10 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 .footer-links { display: flex; flex-wrap: wrap; gap: 18px; font-size: 11px; margin-bottom: 26px; }
 .footer-links a { color: var(--muted-foreground); transition: color .2s; }
 .footer-links a:hover { color: var(--primary); }
-@media (max-width: 900px) { .info-grid, .contact-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .contact-layout { grid-template-columns: 1fr; gap: 30px; } .contact-value { font-size: 28px; } }
 @media (max-width: 600px) {
  .page-title { font-size: 72px; }
- .info-grid, .contact-list { grid-template-columns: 1fr; }
+ .info-grid { grid-template-columns: 1fr; }
  .delivery-strip { flex-direction: column; }
  .delivery-strip .platform-buttons { flex-direction: row; flex-wrap: wrap; width: 100%; }
  .about-gallery { grid-template-columns: repeat(2, 1fr); }
