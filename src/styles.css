@@ -272,16 +272,28 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 .about-gallery img { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--card); border-radius: 6px; padding: 10px; }
 .about-place { margin-top: 36px; max-width: 560px; }
 .about-place .delivery-more { margin-top: 4px; }
-.contact-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 32px; padding-top: 12px; }
+.contact-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 42px 56px; padding-top: 16px; }
+.contact-main { border-top: 2px solid var(--primary); padding-top: 20px; }
+.contact-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--primary); margin-bottom: 14px; }
+.contact-value { font-family: var(--font-heading); font-size: 34px; font-weight: 700; line-height: 1.15; }
+.contact-value-small { font-size: 24px; margin-top: 18px; }
+.contact-value-small:first-of-type { margin-top: 0; }
+.contact-sub { font-size: 14px; line-height: 1.8; color: var(--muted-foreground); margin-top: 6px; }
+.contact-main .delivery-more { margin-top: 16px; font-size: 13px; }
+.contact-hours-card .hours-list { margin-top: 4px; }
+.contact-hours-card .hours-list > div { font-size: 15px; line-height: 2.1; }
+.contact-meta { margin-top: 44px; padding: 22px 26px; background: var(--card); border-radius: 6px; }
+.contact-meta .contact-label { margin-bottom: 8px; }
+.contact-meta-text { font-size: 14px; line-height: 1.8; color: var(--muted-foreground); }
 .hours-list > div { display: flex; justify-content: space-between; gap: 24px; font-size: 11px; line-height: 2.3; }
 .hours-list dt { color: var(--muted-foreground); }
 .footer-links { display: flex; flex-wrap: wrap; gap: 18px; font-size: 11px; margin-bottom: 26px; }
 .footer-links a { color: var(--muted-foreground); transition: color .2s; }
 .footer-links a:hover { color: var(--primary); }
-@media (max-width: 900px) { .info-grid, .contact-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 900px) { .info-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .contact-layout { grid-template-columns: 1fr; gap: 30px; } .contact-value { font-size: 28px; } }
 @media (max-width: 600px) {
  .page-title { font-size: 72px; }
- .info-grid, .contact-list { grid-template-columns: 1fr; }
+ .info-grid { grid-template-columns: 1fr; }
  .delivery-strip { flex-direction: column; }
  .delivery-strip .platform-buttons { flex-direction: row; flex-wrap: wrap; width: 100%; }
  .about-gallery { grid-template-columns: repeat(2, 1fr); }
