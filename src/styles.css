@@ -263,13 +263,13 @@ button, a, input { -webkit-tap-highlight-color: transparent; }
 .delivery-more svg { width: 14px; }
 .platform-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
 .delivery-strip .platform-buttons { flex-direction: column; flex-wrap: nowrap; }
-.platform-button { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding-inline: 22px; border: 1px solid var(--border); border-radius: 4px; background: var(--secondary); font-size: 12px; font-weight: 700; color: var(--foreground); transition: border-color .2s; }
+.platform-button { display: inline-flex; align-items: center; justify-content: center; height: 50px; padding-inline: 28px; border: 1px solid var(--border); border-radius: 4px; background: var(--secondary); font-size: 14px; font-weight: 700; color: var(--foreground); transition: border-color .2s; }
 .platform-button:hover { border-color: var(--primary); }
 .platform-button[aria-disabled='true'] { opacity: .6; cursor: default; }
-.order-cta { margin-top: 34px; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 26px 28px; display: grid; gap: 14px; justify-items: start; }
+.order-cta { margin-top: 34px; border-top: 2px solid var(--primary); padding-top: 22px; display: grid; gap: 14px; justify-items: start; }
 .inline-link { color: var(--primary); font-weight: 700; }
 .about-copy { max-width: 720px; display: grid; gap: 16px; }
-.about-copy p { font-size: 18px; line-height: 1.8; } .about-copy p { font-size: 13px; line-height: 1.9; color: var(--muted-foreground); }
+.about-copy p { font-size: 18px; line-height: 1.8; color: var(--muted-foreground); }
 .about-copy strong { color: var(--foreground); font-weight: 600; }
 .about-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 36px; }
 .about-gallery img { width: 100%; aspect-ratio: 1; object-fit: contain; background: var(--card); border-radius: 6px; padding: 10px; }
