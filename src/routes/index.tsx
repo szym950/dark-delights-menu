@@ -76,7 +76,7 @@ function Index() {
         <div className="menu-shell header-inner">
           <a href="/" className="wordmark" aria-label="Wake Up House — strona główna">WAKE UP<span>HOUSE</span></a>
           <nav className="header-nav" aria-label="Nawigacja główna">
-            <Button variant="ghost" className="nav-current" onClick={() => selectCategory('Wszystko')}>Menu</Button>
+            <button type="button" className="header-nav-link nav-current" onClick={() => selectCategory('Wszystko')}>Menu</button>
             <Link to="/dostawa" className="header-nav-link street-nav">Dostawa</Link>
             <Link to="/o-nas" className="header-nav-link street-nav">O nas</Link>
             <Link to="/kontakt" className="header-nav-link street-nav">Kontakt</Link>
