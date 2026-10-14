@@ -20,24 +20,13 @@ export const Route = createFileRoute('/')({
   component: Index,
 });
 
-const orderCountsKey = 'wuh-dish-counts';
-
-function readOrderCounts(): Record<string, number> {
-  try {
-    return JSON.parse(localStorage.getItem(orderCountsKey) ?? '{}') as Record<string, number>;
-  } catch {
-    return {};
-  }
+async function readOrderCounts(): Promise<Record<string, number>> {
+  const { data } = await supabase.from('dish_counts').select('dish_name, count').order('count', { ascending: false }).limit(50);
+  return Object.fromEntries((data ?? []).map(row => [row.dish_name, Number(row.count)]));
 }
 
 function recordOrder(dish: Dish) {
-  try {
-    const counts = readOrderCounts();
-    counts[dish.name] = (counts[dish.name] ?? 0) + 1;
-    localStorage.setItem(orderCountsKey, JSON.stringify(counts));
-  } catch {
-    // Pamięć przeglądarki niedostępna — pomijamy liczenie.
-  }
+  void supabase.rpc('increment_dish_count', { _dish: dish.name });
 }
 
 function Index() {
@@ -50,12 +39,16 @@ function Index() {
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [topDishes, setTopDishes] = useState<Dish[]>([]);
   useEffect(() => {
-    const counts = readOrderCounts();
-    setTopDishes(dishes
-      .filter(dish => (counts[dish.name] ?? 0) > 0)
-      .sort((a, b) => (counts[b.name] ?? 0) - (counts[a.name] ?? 0))
-      .slice(0, 4));
-  }, [cartCount]);
+    let active = true;
+    readOrderCounts().then(counts => {
+      if (!active) return;
+      setTopDishes(dishes
+        .filter(dish => (counts[dish.name] ?? 0) > 0)
+        .sort((a, b) => (counts[b.name] ?? 0) - (counts[a.name] ?? 0))
+        .slice(0, 4));
+    });
+    return () => { active = false; };
+  }, []);
   const changeCart = (dish: Dish, delta: number) => {
     if (delta > 0) recordOrder(dish);
     setCart(current => {
