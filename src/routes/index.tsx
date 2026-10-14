@@ -51,12 +51,11 @@ function Index() {
   };
   useEffect(() => {
     refreshTopDishes();
-    return () => {};
   }, []);
   const changeCart = (dish: Dish, delta: number) => {
     if (delta > 0) {
       recordOrder(dish);
-      refreshTopDishes({ [dish.name]: delta });
+      refreshTopDishes(400);
     }
     setCart(current => {
       const exists = current.find(item => item.dish.name === dish.name);
