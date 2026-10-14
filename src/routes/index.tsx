@@ -27,7 +27,7 @@ async function readOrderCounts(): Promise<Record<string, number>> {
 }
 
 function recordOrder(dish: Dish) {
-  void supabase.rpc('increment_dish_count', { _dish: dish.name });
+  supabase.rpc('increment_dish_count', { _dish: dish.name }).then(() => {}, () => {});
 }
 
 function Index() {
@@ -39,19 +39,24 @@ function Index() {
   const [cartOpen, setCartOpen] = useState(false);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [topDishes, setTopDishes] = useState<Dish[]>([]);
+  const refreshTopDishes = (delayMs = 0) => {
+    window.setTimeout(() => {
+      readOrderCounts().then(counts => {
+        setTopDishes(dishes
+          .filter(dish => (counts[dish.name] ?? 0) > 0)
+          .sort((a, b) => (counts[b.name] ?? 0) - (counts[a.name] ?? 0) || dishes.indexOf(a) - dishes.indexOf(b))
+          .slice(0, 3));
+      }).catch(() => {});
+    }, delayMs);
+  };
   useEffect(() => {
-    let active = true;
-    readOrderCounts().then(counts => {
-      if (!active) return;
-      setTopDishes(dishes
-        .filter(dish => (counts[dish.name] ?? 0) > 0)
-        .sort((a, b) => (counts[b.name] ?? 0) - (counts[a.name] ?? 0))
-        .slice(0, 4));
-    });
-    return () => { active = false; };
+    refreshTopDishes();
   }, []);
   const changeCart = (dish: Dish, delta: number) => {
-    if (delta > 0) recordOrder(dish);
+    if (delta > 0) {
+      recordOrder(dish);
+      refreshTopDishes(400);
+    }
     setCart(current => {
       const exists = current.find(item => item.dish.name === dish.name);
       if (!exists) return delta > 0 ? [...current, { dish, quantity: delta }] : current;
