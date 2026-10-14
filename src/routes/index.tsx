@@ -7,6 +7,7 @@ import { categories, dishes, type Category, type Dish } from '@/lib/menu';
 import { MenuCart, type CartItem } from '@/components/menu-cart';
 import { SiteFooter } from '@/components/site-footer';
 import { site } from '@/lib/site';
+import { supabase } from '@/integrations/supabase/client';
 
 export const Route = createFileRoute('/')({
   head: () => ({ meta: [
