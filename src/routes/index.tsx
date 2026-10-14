@@ -27,7 +27,7 @@ async function readOrderCounts(): Promise<Record<string, number>> {
 }
 
 function recordOrder(dish: Dish) {
-  void supabase.rpc('increment_dish_count', { _dish: dish.name });
+  supabase.rpc('increment_dish_count', { _dish: dish.name }).then(() => {}, () => {});
 }
 
 function Index() {
