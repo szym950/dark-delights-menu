@@ -96,7 +96,7 @@ function Index() {
         </div>
         <section className="menu-shell menu-content" aria-label="Dania">
         {category === 'Wszystko' && !search && <section className="top-picks" aria-label="Najczęściej wybierane">
-          <div className="section-heading"><h2>Najczęściej wybierane</h2><p>Na podstawie zamówień na tym urządzeniu</p></div>
+          <div className="section-heading"><h2>Najczęściej wybierane</h2><p>Na podstawie wyborów wszystkich klientów</p></div>
           {topDishes.length === 0 ? <p className="top-picks-empty">Tu pojawią się dania, które klienci najczęściej dodają do koszyka.</p> : <div className="product-grid">
             {topDishes.map(dish => <article className="product-card" key={dish.name}>
               <img src={dish.image} alt={dish.name} className="product-image" loading="lazy" width="768" height="768" />
