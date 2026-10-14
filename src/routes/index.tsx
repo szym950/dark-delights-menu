@@ -39,16 +39,15 @@ function Index() {
   const [cartOpen, setCartOpen] = useState(false);
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const [topDishes, setTopDishes] = useState<Dish[]>([]);
-  const refreshTopDishes = (optimistic?: Record<string, number>) => {
-    readOrderCounts().then(counts => {
-      const merged = optimistic
-        ? Object.fromEntries(Object.entries(optimistic).map(([name, add]) => [name, (counts[name] ?? 0) + add]))
-        : counts;
-      setTopDishes(dishes
-        .filter(dish => (merged[dish.name] ?? 0) > 0)
-        .sort((a, b) => (merged[b.name] ?? 0) - (merged[a.name] ?? 0) || dishes.indexOf(a) - dishes.indexOf(b))
-        .slice(0, 3));
-    }).catch(() => {});
+  const refreshTopDishes = (delayMs = 0) => {
+    window.setTimeout(() => {
+      readOrderCounts().then(counts => {
+        setTopDishes(dishes
+          .filter(dish => (counts[dish.name] ?? 0) > 0)
+          .sort((a, b) => (counts[b.name] ?? 0) - (counts[a.name] ?? 0) || dishes.indexOf(a) - dishes.indexOf(b))
+          .slice(0, 3));
+      }).catch(() => {});
+    }, delayMs);
   };
   useEffect(() => {
     refreshTopDishes();
